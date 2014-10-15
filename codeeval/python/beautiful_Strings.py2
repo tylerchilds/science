@@ -1,0 +1,52 @@
+#
+#
+# Beautiful Strings - Code Eval Challenge
+# Tyler Childs - 12/9/2013
+#
+
+import sys
+
+lookup = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7, 'i': 8, 'j': 9, 'k': 10, 'l': 11, 'm': 12, 'n': 13, 'o': 14, 'p': 15, 'q': 16, 'r': 17, 's': 18, 't': 19, 'u': 20, 'v': 21, 'w': 22, 'x': 23, 'y': 24, 'z': 25}
+
+def sort(s):
+    for i in range(1, len(s)):
+        val = s[i]
+        j = i - 1
+        while (j >= 0) and (s[j] < val):
+            s[j+1] = s[j]
+            j = j - 1
+        s[j+1] = val
+
+def add(s, total):
+	val = 26
+	for i in range(1, len(s)):
+		# print val, " * ", s[i], " + ", total
+		total = total + (s[i-1] * val)
+		val = val - 1
+
+	return total
+
+test_cases = open(sys.argv[1], 'rb')
+for test in test_cases:
+
+	# convert to lower, get only word characters
+	test = test.lower()
+	strings = [0] * 26
+	total = 0
+
+	for c in test:
+		try:
+			strings[lookup[c]] = strings[lookup[c]] + 1
+		except KeyError:
+			bad = 1
+
+	sort(strings)
+
+	total = add(strings, total)
+
+	print total
+
+	
+test_cases.close()
+
+

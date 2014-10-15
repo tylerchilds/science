@@ -1,0 +1,31 @@
+#
+#
+# Sum of Primes - Code Eval Challenge
+# Tyler Childs - 12/9/2013
+#
+
+sum = 0
+i = 2
+count = 0
+
+while count < 1000:
+
+	j = 2
+	# check divisors
+	while j <= i:
+		if i == j:
+			sum = sum + i
+			count = count + 1
+			print j
+			break
+
+		
+		if i % j == 0:
+			break
+
+		j = j + 1
+
+	i = i + 1
+
+
+print sum

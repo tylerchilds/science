@@ -1,0 +1,80 @@
+$teal: #00676C;
+$aqua: #009E9A;
+$white: #F6F6F6;
+$tan: #D9D9CD;
+$brown: #AEA190;
+
+html{
+	background-color: $teal;
+	padding: 0 2%;
+}
+
+body{
+	color: darken($brown, 30%);
+}
+hr{
+	border-top-color: $brown;
+}
+
+.vanilla{
+	margin: 55px auto;
+	padding: 34px;
+	background-color: $tan;
+}
+
+.vanilla > *:not(.vanilla) > *{
+
+}
+
+.tiles{
+	div{
+		background-color: $white;
+		padding: 21px;
+	}
+
+	h4{
+		text-align: center;
+	}
+
+	h5{
+		font-family: Courier, monospace;
+		margin: 0 auto 34px;
+		line-height: 80px;
+		height: 80px;
+		width: 80px;
+		text-align: center;
+		font-size: 55px;
+		display: block;
+	}
+
+	button{
+		width: 60%;
+		margin: 0 auto;
+		display: block;
+		text-align: center;
+		border: none;
+		background: $aqua;
+		color: $white;
+		line-height: 34px;
+		font-size: 21px;
+
+
+		&:hover,
+		&:focus{
+			background: $teal;
+		}
+
+		&:active{
+			background: darken($aqua, 5%);
+		}
+	}
+
+	p{
+		margin-top: 21px;
+	}
+}
+
+footer{
+	text-align: center;
+	margin: 89px 0 0 !important;
+}

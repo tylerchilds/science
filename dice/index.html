@@ -1,0 +1,120 @@
+<!doctype html>
+<html ng-app>
+  <head>
+    <link rel="stylesheet" href="css/dice.css">
+  </head>
+  <body>
+    <div class="vanilla" ng-controller="Dice">
+      <header>
+        <h1>Dice Rolls: Probability &amp; Random</h1>
+      </header>
+      <section class="tiles">
+        <div>
+          <h4>True</h4>
+          <h5>{{trCoin.lastRoll}}</h5>
+          <button ng-click="trCoin.roll()">Roll</button>
+          <p>Stats</p>
+          <ol>
+            <li ng-repeat="stat in trCoin.stats">{{stat}}</li>
+          <ol>
+        </div>
+
+        <div>
+          <h4>Shuffle</h4>
+          <h5>{{srCoin.lastRoll}}</h5>
+          <button ng-click="srCoin.roll()">Roll</button>
+          <p>Stats</p>
+          <ol>
+            <li ng-repeat="stat in srCoin.stats">{{stat}}</li>
+          <ol>
+        </div>
+
+        <div>
+          <h4>Bag</h4>
+          <h5>{{brCoin.lastRoll}}</h5>
+          <button ng-click="brCoin.roll()">Roll</button>
+          <p>Stats</p>
+          <ol>
+            <li ng-repeat="stat in brCoin.stats">{{stat}}</li>
+          <ol>
+        </div>
+      </section>
+      <hr />
+      <h3>Bag Random Dice Set</h3>
+      <section class="tiles">
+        <div>
+          <h4>4-Sided</h4>
+          <h5>{{br4.lastRoll}}</h5>
+          <button ng-click="br4.roll()">Roll</button>
+        </div>
+
+        <div>
+          <h4>6-Sided</h4>
+          <h5>{{br6.lastRoll}}</h5>
+          <button ng-click="br6.roll()">Roll</button>
+        </div>
+
+        <div>
+          <h4>8-Sided</h4>
+          <h5>{{br8.lastRoll}}</h5>
+          <button ng-click="br8.roll()">Roll</button>
+        </div>
+      </section>
+      <section class="tiles">
+        <div>
+          <h4>10-Sided</h4>
+          <h5>{{br10.lastRoll}}</h5>
+          <button ng-click="br10.roll()">Roll</button>
+        </div>
+
+        <div>
+          <h4>12-Sided</h4>
+          <h5>{{br12.lastRoll}}</h5>
+          <button ng-click="br12.roll()">Roll</button>
+        </div>
+
+        <div>
+          <h4>20-Sided</h4>
+          <h5>{{br20.lastRoll}}</h5>
+          <button ng-click="br20.roll()">Roll</button>
+        </div>
+      </section>
+      <hr />
+
+      <h3>Automated Statistic Test</h3>
+      <form ng-submit="statTest()">
+        <label>How Many Rolls?</label>
+        <input type="text" ng-model="testLoop" placeholder="between 1 and 100000">
+        <input type="submit" value="Run Test">
+        <button ng-click="resetTest()">Reset</button>
+      </form>
+
+      <section class="tiles">
+        <div>
+          <h4>True</h4>
+          <ol>
+            <li ng-repeat="stat in trStat.stats">{{stat}}</li>
+          <ol>
+        </div>
+        <div>
+          <h4>Shuffle</h4>
+          <ol>
+            <li ng-repeat="stat in srStat.stats">{{stat}}</li>
+          <ol>
+        </div>
+        <div>
+          <h4>Bag</h4>
+          <ol>
+            <li ng-repeat="stat in brStat.stats">{{stat}}</li>
+          <ol>
+        </div>
+      </section>
+      <footer>
+        <p>&copy; 2013 <a href="http://www.tylerchilds.com">Tyler Childs</a></p>
+      </footer>
+    </div>
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/main-ck.js"></script>
+  </body>
+</html>
