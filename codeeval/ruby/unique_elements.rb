@@ -1,7 +1,7 @@
 #
 #
 # Unique Elements - Code Eval Challenge
-# Tyler Childs - 10/12/2013
+# Tyler Childs - 10/12/2014
 #
 
 # open file from command line

@@ -1,7 +1,7 @@
 #
 #
 # Fibinacci - Code Eval Challenge
-# Tyler Childs - 10/12/2013
+# Tyler Childs - 10/12/2014
 #
 
 # open file from command line
@@ -20,7 +20,7 @@ file.each_line do |line|
   else
     result = 0
   end
-  
+
   puts result
 end
 

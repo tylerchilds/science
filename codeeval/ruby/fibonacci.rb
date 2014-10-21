@@ -1,7 +1,7 @@
 #
 #
 # Fibonacci - Code Eval Challenge
-# Tyler Childs - 10/12/2013
+# Tyler Childs - 10/12/2014
 #
 
 # open file from command line
@@ -14,7 +14,7 @@ end
 
 def fib_find(pos)
 	return 0 if pos == 0
-	
+
 	older = old = current = 1
 
 	(1..pos).each do |index|

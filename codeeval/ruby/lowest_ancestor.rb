@@ -41,26 +41,35 @@ class BinarySearchTree
     end
   end
 
+  # find a lineage
   def get_ancestors(value)
     ancestors = []
     current = @root
 
-    while nil != current
+    until nil == current
       ancestors.push(current.value)
+      return ancestors if current.value == value
       current = value < current.value ? current.left : current.right
     end
 
-    return ancestors
+    ancestors
   end
 
+  # get the two lineages and start sacrificing the youngest
   def lowest_common_ancestor(x, y)
-    line = get_ancestors(x)
-    other_line = get_ancestors(y)
+    history_x = get_ancestors(x)
+    history_y = get_ancestors(y)
 
-    line.reverse.each do |a|
-      other_line.reverse.each do |b|
-        return a if a == b
-      end
+    sacrifice_youngest(history_x, history_y)
+  end
+
+  # sacrifice children until the lowest common ansestor is found
+  def sacrifice_youngest(hx, hy)
+    until hx == nil && hy == nil
+      return hx.last if hx.last == hy.last
+      hx.length > hy.length ? hx.pop : hy.pop
+
+      sacrifice_youngest(hx, hy)
     end
   end
 end

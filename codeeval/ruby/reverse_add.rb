@@ -1,7 +1,7 @@
 #
 #
 # Reverse and Add - Code Eval Challenge
-# Tyler Childs - 10/12/2013
+# Tyler Childs - 10/12/2014
 #
 
 class Integer

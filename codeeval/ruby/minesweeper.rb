@@ -1,7 +1,7 @@
 #
 #
 # Minesweeper - Code Eval Challenge
-# Tyler Childs - 10/12/2013
+# Tyler Childs - 10/12/2014
 #
 
 class Array
@@ -73,7 +73,7 @@ class Minefield
 
 			end
 		end
-		
+
 		count
 	end
 

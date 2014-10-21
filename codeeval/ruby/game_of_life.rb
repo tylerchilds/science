@@ -1,7 +1,7 @@
 #
 #
 # Game of Life - Code Eval Challenge
-# Tyler Childs - 10/12/2013
+# Tyler Childs - 10/12/2014
 #
 
 class Array
@@ -44,7 +44,7 @@ class Life
 
 			update_board()
 		end
-		
+
 		self
 	end
 
@@ -73,7 +73,7 @@ class Life
 
 			end
 		end
-		
+
 		count
 	end
 
