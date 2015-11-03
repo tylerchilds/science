@@ -120,3 +120,11 @@ Not all users are using blazing fast connections and shiny devices. We need to h
 > Good performance is good design.
 
 Addressing performance is designing with empathy.
+
+### Industry Standards
+
+No hard and fast rules
+
+Benchmark at 20% below the competition.
+
+Fine tune per page.
