@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Group Generator</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body{
+        min-width: 768px;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .person{
+        border: 1px solid #eee;
+        border-top: none;
+        border-bottom-color: #ddd;
+        margin-bottom: 0;
+        padding: 3px 10px;
+      }
+
+      .person:first-child{
+        border-top: 1px solid #eee;
+      }
+
+      .people-list{
+        margin-bottom: 20px;
+      }
+
+      .remove-name{
+        float: right;
+        color: #ccc;
+      }
+
+      .remove-name:hover{
+        color: #999;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container-fluid">
+      <div class="header clearfix">
+        <h3 class="text-muted">Group Generator</h3>
+      </div>
+
+      <div class="row">
+        <aside class="col-xs-4">
+          <h3>People</h3>
+          <div id="region-names" class="people-list">
+
+          </div>
+          <form class="well" id="form-names">
+            <div class="form-group">
+              <label for="add-names">Add People</label>
+              <textarea class="form-control" rows="3" id="add-names" placeholder="Comma separated list of users"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">Add People</button>
+          </form>
+        </aside>
+        <section class="col-xs-8">
+          <form class="well form-inline" id="form-groups">
+            <div class="form-group">
+              <label for="group-size">Group Size</label>
+              <input type="text" class="form-control" id="group-size" value="5">
+            </div>
+            <button type="submit" class="btn btn-default">Create Groups</button>
+          </form>
+
+          <div id="region-groups" class="row">
+
+          </div>
+        </section>
+      </div>
+
+      <footer class="footer">
+        <p>&copy; 2015</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <script type="text/template" id="view-single-list-edit">
+      <p class="person">
+        <%= name %> 
+        <i class="glyphicon glyphicon-remove remove-name" data-name="<%= name %>"></i>
+      </p>
+    </script>
+
+    <script type="text/template" id="view-single-list">
+      <li><%= name %></li>
+    </script>
+
+    <script type="text/template" id="view-group">
+      <div class="col-xs-4">
+        <h3>Group: <%= index %> </h3>
+        <ul><%= list_html %></ul>
+      </div>
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script>
+      App = {
+        views: {
+          single: _.template($('#view-single-list').html()),
+          single_edit: _.template($('#view-single-list-edit').html()),
+          group: _.template($('#view-group').html()),
+        },
+
+        forms: {
+          groups: $('#form-groups'),
+          names: $('#form-names'),
+        },
+
+        regions: {
+          groups: $('#region-groups'),
+          names: $('#region-names'),
+        },
+
+        get_names: function(){
+          var names = localStorage.getItem("names")
+          return names ? JSON.parse(names) : [];
+        },
+
+        set_names: function(new_names){
+          var names = _.union(this.get_names(), new_names);
+          localStorage.setItem("names", JSON.stringify(names));
+          this.render_list();
+        },
+
+        remove_name: function(name){
+          var names = _.difference(this.get_names(), [name]);
+          localStorage.setItem("names", JSON.stringify(names));
+          this.render_list();
+        },
+
+        chunkify: function (a, n, balanced) {
+          if (n < 2)
+            return [a];
+
+          var len = a.length, out = [], i = 0, size;
+
+          if (len % n === 0) {
+            size = Math.floor(len / n);
+            while (i < len) {
+              out.push(a.slice(i, i += size));
+            }
+          }
+
+          else if (balanced) {
+            while (i < len) {
+              size = Math.ceil((len - i) / n--);
+              out.push(a.slice(i, i += size));
+            }
+          }
+
+          else {
+            n--;
+            size = Math.floor(len / n);
+            if (len % size === 0)
+                size--;
+            while (i < size * n) {
+                out.push(a.slice(i, i += size));
+            }
+            out.push(a.slice(size * n))
+          }
+
+          return out;
+        },
+
+        generate_groups: function(size){
+          var groups = this.chunkify(_.shuffle(this.get_names()), size, true);
+
+          this.render_groups(groups, size);
+        },
+
+        render_groups: function(groups, size){
+          App.regions.groups.empty();
+          var self = this;
+
+          _.each(groups, function(group, i){
+            var list_html = "";
+
+            _.each(group, function(name){
+              list_html += self.views.single({name: name});
+            });
+
+            var group_html = self.views.group({list_html: list_html, index: i+1});
+
+            App.regions.groups.append(group_html);
+          });
+        },
+
+        render_list: function(){
+          var self = this;
+
+          var names_html = "";
+
+          _.each(self.get_names(), function(name){
+            names_html += self.views.single_edit({name: name});
+          });
+
+          self.regions.names.html(names_html);
+        }
+      };
+
+      $(function(){
+        App.render_list();
+        App.generate_groups(5);
+
+        App.forms.groups.on('submit', function(e){
+          e.preventDefault();
+          if(_.isEmpty($(e.target).find('#group-size').val())) return;
+
+          var size = parseInt($(e.target).find('#group-size').val().trim());
+
+          App.generate_groups(size);
+        });
+
+        App.forms.names.on('submit', function(e){
+          e.preventDefault();
+          if(_.isEmpty($(e.target).find('#add-names').val())) return;
+
+          var names = $(e.target).find('#add-names').val().split(',');
+          App.set_names(names);
+
+          App.forms.names.find('textarea').val('');
+        });
+
+        $(document).on('click', '.remove-name', function(e){
+          var name = $(e.target).data('name');
+
+          App.remove_name(name);
+        })
+      });
+
+
+    </script>
+
+
+  </body>
+</html>
