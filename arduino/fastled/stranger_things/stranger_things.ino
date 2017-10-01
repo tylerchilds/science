@@ -1,9 +1,8 @@
-#include <HashMap.h>
 #include <FastLED.h>
 #define DATA_PIN 6  //this is the data pin connected to the LED strip.  If using WS2801 you also need a clock pin
 #define NUM_LEDS 50 //change this for the number of LEDs in the strip
 #define COLOR_ORDER RGB
-#define DELAY 750
+#define DELAY 250
 
 #define RED 0xFF004D
 #define ORANGE 0xFFA300
@@ -19,68 +18,78 @@ CRGB leds[NUM_LEDS];
 
 long RAINBOW[7] = {BLUE, PINK, ORANGE, GREEN, YELLOW, RED, INDIGO};
 
-HashType<char*,int> hashRawArray[27]; 
-HashMap<char*,int> lookup = HashMap<char*,int>( hashRawArray , 27 );
-
-// array of colors
-// mod 7
+String lookup[NUM_LEDS];
 
 void setup(){
+  Serial.begin(9600);
   FastLED.addLeds<WS2811, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS); //setting up the FastLED
 
-   
-  lookup[0]("a", 0);
-  lookup[1]("b", 1);
-  lookup[2]("c", 2);
-  lookup[3]("d", 3);
-  lookup[4]("e", 4);
-  lookup[5]("f", 5);
-  lookup[6]("g", 6);
-  lookup[27](" ", NUM_LEDS+1);
+  FastLED.setBrightness(32);
+  lookup[0] = "a";
+  lookup[1] = "b";
+  lookup[2] = "c";
+  lookup[3] = "d";
+  lookup[5] = "e";
+  lookup[6] = "f";
+  lookup[7] = "g";
+  lookup[8] = "h";
+  lookup[11] = "i";
+  lookup[12] = "j";
+  lookup[13] = "k";
+  lookup[14] = "l";
+  lookup[15] = "m";
+  lookup[17] = "n";
+  lookup[18] = "o";
+  lookup[19] = "p";
+  lookup[20] = "q";
+  lookup[21] = "r";
+  lookup[22] = "s";
+  lookup[23] = "t";
+  lookup[24] = "u";
+  lookup[27] = "v";
+  lookup[28] = "w";
+  lookup[29] = "x";
+  lookup[30] = "y";
+  lookup[31] = "z";
 }
 
 void loop(){
-  on();
-  off();
-
-  alert();
-
-  stripe();
-
-  alert();
-
-  stripe();
-
+  snake();
+  speak("abcdefghijklmnopqrstuvwxyz");
 }
 
 
 
 void on(){
   for (int i = 0; i < NUM_LEDS; i++) {
-    FastLED.setBrightness(32);
-    leds[i] = RAINBOW[i % (sizeof(RAINBOW)/sizeof(long))];
+    leds[i] = colorAt(i);
   }
   FastLED.show();
   delay(DELAY);
 }
 
-void off(){
+void clear(){
   FastLED.clear();
   FastLED.show();
+}
+
+void off(){
+  clear();
   delay(DELAY);
 }
 
 void blink(int led){
-  leds[led] = RAINBOW[led % (sizeof(RAINBOW)/sizeof(long))];
+  leds[led] = colorAt(led);
   FastLED.show();
   delay(DELAY);
   leds[led] = OFF;
   FastLED.show();
   delay(DELAY);
 }
-void speak(char* saying){
-  for(char* it = saying; *it; ++it) {
-    int led = lookup.getIndexOf(*it);
+
+void speak(String saying){
+  for(int i = 0; i < saying.length(); i++) {
+    int led = indexFromLetter(saying.charAt(i));
     blink(led);
   }
 }
@@ -98,7 +107,7 @@ void stripe(){
   for (int n = 0; n < stripeDistance*3; n++) {
     for (int i = 0; i < NUM_LEDS; i++) {
       if((n+i) % stripeDistance == 0) {
-        leds[i] = RAINBOW[i % (sizeof(RAINBOW)/sizeof(long))];
+        leds[i] = colorAt(i);
       } else {
         leds[i] = OFF;
       }
@@ -109,3 +118,42 @@ void stripe(){
 
   off();
 }
+
+
+void snake(){
+  int distance = NUM_LEDS*3;
+  
+  for (int i = 0; i < distance; i++) {
+    clear();
+
+    int led0 = i % NUM_LEDS;
+    int led1 = (i-1) % NUM_LEDS;
+    int led2 = (i-2) % NUM_LEDS;
+    int led3 = (i-3) % NUM_LEDS;
+    
+    leds[led0] = colorAt(led0);
+    leds[led1] = colorAt(led1);
+    leds[led2] = colorAt(led2);
+    leds[led3] = colorAt(led3);
+
+    FastLED.show();
+    delay(25);
+  }
+  off();
+}
+
+long colorAt(int i){
+  return RAINBOW[i % (sizeof(RAINBOW)/sizeof(long))];
+}
+
+int indexFromLetter(char letter){
+  int index = 49;
+  for (int i=0; i<NUM_LEDS; i++) {
+    if (letter == lookup[i].charAt(0)) {
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
+
