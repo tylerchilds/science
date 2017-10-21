@@ -11,6 +11,7 @@
 #define YELLOW 0xD5A700
 #define GREEN 0x174C00
 #define BLUE 0x190894
+#define ORANGE 0x693000
 #define OFF 0x000000
 
 #define HIGH_BRIGHTNESS 160
@@ -60,8 +61,7 @@ void setup() {
 
 void loop() {
   doSomething();
-  on();
-  delay(random(4, 10) * 30000);
+  delay(random(4, 20) * 15000);
 }
 
 
@@ -85,7 +85,7 @@ void doSomething(){
   } else
 
   if(range < 90){
-    pulse();
+    halloween();
   } else
 
   if(range < 100){
@@ -95,6 +95,18 @@ void doSomething(){
 
 void sayAnything(){
   int range = random(100);
+  pulse();
+  delay(DELAY);
+  pulse();
+  wallCrawl();
+  delay(DELAY_SLOW);
+  pulse();
+  pulse();
+  delay(DELAY_FAST);
+  turnDown(HIGH_BRIGHTNESS, 0);
+  strip.setBrightness(HIGH_BRIGHTNESS);
+  delay(delay);
+  clear();
 
   if(range < 5){
     speak("the quick brown fox jumped over the lazy dog");
@@ -158,6 +170,7 @@ void speak(String saying){
     int led = indexFromLetter(saying.charAt(i));
     blink(led);
   }
+  on();
 }
 
 void alert(){
@@ -182,46 +195,97 @@ void stripe(){
     strip.show();
     delay(DELAY_FAST);
   }
+  on();
+}
+
+void halloween(){
+  clear();
+  for (int n = 0; n < 60; n++) {
+    for (int i = NUM_LEDS; i >= 0 ; i--) {
+      if((n+i) % 3 == 0) {
+        strip.setPixelColor(i, ORANGE);
+      } else {
+        strip.setPixelColor(i, OFF);
+      }
+    }
+    strip.show();
+    delay(DELAY);
+  }
+  on();
 }
 
 
 void snake(){
   clear();
-  int distance = NUM_LEDS*3;
+  int distance = 4;
+
+  for (int n = 0; n < distance; n++) {
+    for (int i = NUM_LEDS; i >= 0; i--) {
+      clear();
   
-  for (int i = NUM_LEDS; i >= 0; i--) {
-    clear();
-
-    int led0 = i % NUM_LEDS;
-    int led1 = (i-1) % NUM_LEDS;
-    int led2 = (i-2) % NUM_LEDS;
-    int led3 = (i-3) % NUM_LEDS;
-    
-    strip.setPixelColor(led0, colorAt(led0));
-    strip.setPixelColor(led1, colorAt(led1));
-    strip.setPixelColor(led2, colorAt(led2));
-    strip.setPixelColor(led3, colorAt(led3));
-
-    strip.show();
-    delay(10);
+      int led0 = i % NUM_LEDS;
+      int led1 = (i-1) % NUM_LEDS;
+      int led2 = (i-2) % NUM_LEDS;
+      int led3 = (i-3) % NUM_LEDS;
+      
+      strip.setPixelColor(led0, colorAt(led0));
+      strip.setPixelColor(led1, colorAt(led1));
+      strip.setPixelColor(led2, colorAt(led2));
+      strip.setPixelColor(led3, colorAt(led3));
+  
+      strip.show();
+      delay(10);
+    }
   }
+  on();
+}
+
+void wallCrawl(){
+  clear();
+
+  for(int n = NUM_LEDS; n > -6; n-=uptake(n)){
+    for(int i=NUM_LEDS; i > n; i--) {
+      if(i >= 0){
+        strip.setPixelColor(i, colorAt(i));
+      }
+    }
+    strip.show();
+    delay(DELAY);
+  }
+  on();
+}
+
+int uptake(int n){
+  return random(1, 6);
 }
 
 void pulse(){
-  int difference = HIGH_BRIGHTNESS - LOW_BRIGHTNESS;
+  turnDown(HIGH_BRIGHTNESS, LOW_BRIGHTNESS);
+  turnUp(LOW_BRIGHTNESS, HIGH_BRIGHTNESS);
+}
+
+void turnDown(int from, int to){
+  int difference = from - to;
   int steps = 15;
   int stepSize = difference / steps;
 
   for (int i=0; i < steps; i++) {
-    strip.setBrightness(HIGH_BRIGHTNESS - (stepSize*i));
+    strip.setBrightness(from - (stepSize*i));
     strip.show();
-    delay(20);
+    delay(25);
   }
+}
+
+
+void turnUp(int from, int to){
+  int difference = to - from;
+  int steps = 15;
+  int stepSize = difference / steps;
 
   for (int i=0; i < steps; i++) {
-    strip.setBrightness(LOW_BRIGHTNESS + (stepSize*i));
+    strip.setBrightness(from + (stepSize*i));
     strip.show();
-    delay(20);
+    delay(25);
   }
 }
 
@@ -263,6 +327,7 @@ void rainbowCycle(uint8_t wait) {
     strip.show();
     delay(wait);
   }
+  on();
 }
 
 // Input a value 0 to 255 to get a color value.
