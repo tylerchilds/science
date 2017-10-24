@@ -183,7 +183,7 @@ void alert(){
 
 void stripe(){
   clear();
-  int stripeDistance = 4;
+  int stripeDistance = 20;
   for (int n = 0; n < stripeDistance*3; n++) {
     for (int i = NUM_LEDS; i >= 0 ; i--) {
       if((n+i) % stripeDistance == 0) {
